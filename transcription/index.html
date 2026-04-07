@@ -171,59 +171,8 @@ canvas#tp-grain { position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.
 .card-upload, .card-url { grid-column:span 12; }
 .card-action  { grid-column:span 12; }
 
-/* ── Admin banner (masqué par défaut) ── */
-.admin-banner {
-    margin-bottom: 20px;
-    animation: fadeIn 0.5s ease both;
-    display: none; /* caché par défaut, activé via JS */
-}
-.admin-banner-inner {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    padding: 18px 24px;
-    background: rgba(212,163,115,0.08);
-    border: 1px solid rgba(212,163,115,0.3);
-    border-radius: 16px;
-    flex-wrap: wrap;
-}
-.admin-badge {
-    font-family: var(--nav-mono); font-size: 10px; font-weight: 700;
-    letter-spacing: 0.12em; text-transform: uppercase;
-    background: linear-gradient(135deg, #d4a373, #e5ba8f);
-    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-    background-clip: text;
-    flex-shrink: 0;
-    padding: 3px 10px;
-    border: 1px solid rgba(212,163,115,0.4);
-    border-radius: 6px;
-}
-.admin-banner-text { flex: 1; min-width: 180px; font-size: 13px; color: rgba(212,163,115,0.8); }
-.admin-key-wrap { display: flex; align-items: center; gap: 10px; flex: 2; min-width: 240px; }
-.admin-key-input {
-    flex: 1; background: rgba(212,163,115,.06); border: 1px solid rgba(212,163,115,.25);
-    border-radius: 10px; padding: 10px 14px; color: #fff;
-    font-family: var(--nav-mono); font-size: 12px; outline: none;
-    transition: border-color .2s; min-width: 0;
-}
-.admin-key-input:focus { border-color: rgba(212,163,115,.5); }
-.admin-save-btn {
-    padding: 10px 18px; background: linear-gradient(135deg,#b87c3a,#d4a373);
-    border: none; border-radius: 10px; color: #fff;
-    font-size: 12px; font-weight: 700; cursor: pointer;
-    font-family: 'Sora', sans-serif; white-space: nowrap;
-    transition: opacity .2s; flex-shrink: 0;
-}
-.admin-save-btn:hover { opacity:.85; }
-.admin-test-btn {
-    padding: 10px 18px; background: rgba(212,163,115,.1);
-    border: 1px solid rgba(212,163,115,.3); border-radius: 10px; color: #d4a373;
-    font-size: 12px; font-weight: 600; cursor: pointer;
-    font-family: var(--nav-mono); white-space: nowrap;
-    transition: all .2s; flex-shrink: 0;
-}
-.admin-test-btn:hover { background: rgba(212,163,115,.18); }
-.admin-status { font-family: var(--nav-mono); font-size: 11px; color: rgba(212,163,115,0.5); }
+/* API key banner - hidden */
+.api-banner { display: none; }
 
 /* Mode selector */
 .mode-selector { display:grid;grid-template-columns:1fr 1fr;gap:16px; }
@@ -283,9 +232,6 @@ canvas#tp-grain { position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.
 .progress-fill { position:relative;height:100%;background:linear-gradient(90deg,var(--bp),var(--bl));border-radius:12px;transition:width 0.4s var(--transition-smooth); }
 .progress-shine { position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,0.4) 50%,transparent 100%);animation:shine 1.5s infinite; }
 @keyframes shine { 0%{left:-100%;}100%{left:200%;} }
-
-/* Chunk progress sub-label */
-.chunk-sub { font-size:12px;color:rgba(168,197,226,.5);font-family:var(--nav-mono);margin-top:4px;min-height:18px; }
 
 /* Error */
 .error-container { margin-bottom:32px;animation:shake 0.5s; }
@@ -368,8 +314,8 @@ canvas#tp-grain { position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.
     .actions-grid { grid-template-columns:1fr 1fr; }
     .speaker-item { grid-template-columns:auto 1fr; gap:10px; }
     .speaker-rename-btn { grid-column:2; justify-self:end; }
-    .admin-banner-inner { flex-direction:column;align-items:flex-start; }
-    .admin-key-wrap { width:100%; }
+    .api-banner-inner { flex-direction:column;align-items:flex-start; }
+    .api-banner-input-wrap { width:100%; }
 }
 @media(max-width:480px) {
     .card-content { padding:16px; }
@@ -479,24 +425,10 @@ canvas#tp-grain { position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.
       <div class="logo-ripple"></div>
     </div>
     <h2 class="trans-title">Transcription Audio &amp; Vidéo</h2>
-    <p class="trans-subtitle">// Propulsé par Groq Whisper — accès libre</p>
+    <p class="trans-subtitle">// Propulsé par Groq Whisper — 100% client-side</p>
   </div>
 
-  <!-- ══ ADMIN BANNER (visible uniquement en mode admin) ══ -->
-  <div class="admin-banner" id="admin-banner">
-    <div class="admin-banner-inner">
-      <span class="admin-badge">🛡 Admin</span>
-      <div class="admin-banner-text">
-        Mode administration — clé de secours (remplace la clé serveur pour ce test uniquement)
-      </div>
-      <div class="admin-key-wrap">
-        <input type="password" id="admin-key-input" class="admin-key-input" placeholder="gsk_... (clé de secours)" autocomplete="off">
-        <button class="admin-save-btn" id="admin-save-btn">Sauvegarder</button>
-        <button class="admin-test-btn" id="admin-test-btn">Tester</button>
-      </div>
-      <span class="admin-status" id="admin-status"></span>
-    </div>
-  </div>
+
 
   <!-- Main grid -->
   <div class="bento-grid">
@@ -530,7 +462,7 @@ canvas#tp-grain { position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.
           </div>
           <label class="upload-label" for="trans-file">
             <span id="trans-file-label-text" class="upload-text">Déposez votre fichier ici<br><small style="font-size:13px;font-weight:400;color:#5a7ba6;">ou cliquez pour parcourir</small></span>
-            <span class="upload-hint">MP3, WAV, OGG, MP4, WebM, FLAC, M4A · Fichiers >25 Mo automatiquement découpés</span>
+            <span class="upload-hint">MP3, WAV, OGG, MP4, WebM, FLAC, M4A (max 25 Mo — limite API Groq)</span>
             <input type="file" id="trans-file" accept="audio/*,video/*,.mp3,.wav,.ogg,.webm,.flac,.mp4,.mov,.m4a">
           </label>
         </div>
@@ -551,7 +483,7 @@ canvas#tp-grain { position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.
           <span class="platform-badge">Twitter / X</span>
           <span class="platform-badge">TikTok</span>
         </div>
-        <p class="url-note">Via cobalt.tools · extraction audio côté client · GitHub Pages compatible</p>
+        <p class="url-note">Via Supadata · extraction audio côté serveur · YouTube, Instagram, TikTok, Twitter/X</p>
       </div>
     </div>
 
@@ -585,7 +517,6 @@ canvas#tp-grain { position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.
             <div class="progress-shine"></div>
           </div>
         </div>
-        <div id="chunk-sub" class="chunk-sub"></div>
       </div>
     </div>
   </div>
@@ -699,29 +630,21 @@ canvas#tp-grain { position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.
 })();
 </script>
 
-<!-- ══════════════════════════════════════════════════════════
-     TOOL JS — VERSION REFACTORISÉE
-     ══════════════════════════════════════════════════════════ -->
+<!-- Tool JS -->
 <script>
 (function() {
   'use strict';
 
-  /* ══ CONFIGURATION ══════════════════════════════════════════
-   * Adaptez ces constantes à votre déploiement.
-   * ─────────────────────────────────────────────────────────*/
-  const API_ENDPOINT   = '/api/transcribe';   // URL de la fonction serverless Vercel/Netlify
-  const CHUNK_MB       = 20;                   // taille cible d'un segment (Mo)
-  const MAX_GROQ_BYTES = 25 * 1024 * 1024;    // limite Groq
-  const LS_ADMIN_KEY   = 'aln_admin_key';     // clé localStorage pour le mode admin
+  // ── Clés API (hardcodées) ──
+  const GROQ_API_KEY    = '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';
+  const SUPADATA_API_KEY = 'sd_2c61dc3abcdcd9153870c2c5516c696e';
 
-  /* ══ ÉTAT ════════════════════════════════════════════════════*/
   const COLORS = ['#4a7fb5','#e07b54','#5a9e6f','#9b6b9e','#c4853a','#3d8b9e','#b85c8a','#6b7fa8','#8ea650','#7a5c4e'];
-  let names = {}, colors = {}, data = [], currentMode = 'file';
-  let adminMode = false;
 
+  let names = {}, colors = {}, data = [], currentMode = 'file';
   const $ = id => document.getElementById(id);
 
-  /* ══ CARD GLOW ═══════════════════════════════════════════════*/
+  // ── Card glow ──
   document.querySelectorAll('.bento-card').forEach(card => {
     card.addEventListener('mousemove', e => {
       const r = card.getBoundingClientRect();
@@ -730,75 +653,7 @@ canvas#tp-grain { position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.
     });
   });
 
-  /* ══ ADMIN MODE ══════════════════════════════════════════════
-   * Activation :
-   *   • Paramètre URL  : ?admin=1
-   *   • Raccourci clavier : Shift + Alt + A
-   * ─────────────────────────────────────────────────────────*/
-  function getAdminKey() { return localStorage.getItem(LS_ADMIN_KEY) || ''; }
-
-  function enableAdminMode() {
-    adminMode = true;
-    const banner = $('admin-banner');
-    banner.style.display = 'block';
-    const saved = getAdminKey();
-    if (saved) {
-      $('admin-key-input').value = saved;
-      $('admin-status').textContent = '✓ Clé chargée depuis le stockage local';
-    }
-  }
-
-  // Détection via URL
-  if (new URLSearchParams(window.location.search).get('admin') === '1') {
-    enableAdminMode();
-  }
-
-  // Détection via raccourci clavier (Shift + Alt + A)
-  let _adminSeq = [];
-  document.addEventListener('keydown', e => {
-    if (e.shiftKey && e.altKey && e.key === 'A') {
-      enableAdminMode();
-    }
-  });
-
-  // Sauvegarde de la clé de secours
-  $('admin-save-btn').onclick = function() {
-    const val = $('admin-key-input').value.trim();
-    if (!val) { $('admin-status').textContent = '⚠ Clé vide'; return; }
-    localStorage.setItem(LS_ADMIN_KEY, val);
-    $('admin-status').textContent = '✓ Sauvegardé';
-    setTimeout(() => { $('admin-status').textContent = ''; }, 2500);
-  };
-
-  // Test de connexion (mode admin uniquement)
-  $('admin-test-btn').onclick = async function() {
-    $('admin-status').textContent = '⏳ Test en cours…';
-    try {
-      // Crée un minuscule fichier audio silencieux de test (WAV 1s 8kHz mono)
-      const wavBlob = buildSilentWav(1, 8000);
-      const fd = new FormData();
-      fd.append('file', wavBlob, 'test.wav');
-      fd.append('model', 'whisper-large-v3-turbo');
-      fd.append('response_format', 'json');
-      fd.append('language', 'fr');
-
-      const headers = {};
-      const adminKey = getAdminKey();
-      if (adminKey) headers['X-Admin-Key'] = adminKey;  // transmis pour info (pas utilisé côté serveur sauf si vous le souhaitez)
-
-      const res = await fetch(API_ENDPOINT, { method: 'POST', headers, body: fd });
-      if (res.ok) {
-        $('admin-status').textContent = '✅ Connexion OK (HTTP ' + res.status + ')';
-      } else {
-        const j = await res.json().catch(() => ({}));
-        $('admin-status').textContent = '❌ ' + (j.error || 'HTTP ' + res.status);
-      }
-    } catch(err) {
-      $('admin-status').textContent = '❌ Réseau : ' + err.message;
-    }
-  };
-
-  /* ══ TABS ═════════════════════════════════════════════════════*/
+  // ── Tabs ──
   $('tab-file').onclick = () => switchTab('file');
   $('tab-url').onclick  = () => switchTab('url');
 
@@ -813,7 +668,7 @@ canvas#tp-grain { position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.
     });
   }
 
-  /* ══ DRAG & DROP ══════════════════════════════════════════════*/
+  // ── Drag & drop ──
   const dropZone  = $('drop-zone');
   const fileInput = $('trans-file');
 
@@ -833,21 +688,16 @@ canvas#tp-grain { position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.
 
   function updateFileLabel(file) {
     const size = (file.size / (1024*1024)).toFixed(1);
-    const needsChunk = file.size > MAX_GROQ_BYTES;
-    const hint = needsChunk
-      ? `<small style="font-size:13px;font-weight:400;color:#d4a373;">${size} Mo · Sera découpé automatiquement ✂</small>`
-      : `<small style="font-size:13px;font-weight:400;color:#6ba68d;">${size} Mo · Prêt à transcrire ✓</small>`;
-    $('trans-file-label-text').innerHTML = `<strong style="color:#fff">${escapeHtml(file.name)}</strong><br>${hint}`;
+    $('trans-file-label-text').innerHTML = `<strong style="color:#fff">${escapeHtml(file.name)}</strong><br><small style="font-size:13px;font-weight:400;color:#6ba68d;">${size} Mo · Prêt à transcrire ✓</small>`;
   }
 
-  /* ══ PROGRESS HELPERS ═════════════════════════════════════════*/
-  function setProgress(pct, label, sub) {
+  // ── Progress helper ──
+  function setProgress(pct, label) {
     $('trans-progress-bar').style.width = pct + '%';
     $('trans-progress-text').textContent = label;
-    $('chunk-sub').textContent = sub || '';
   }
 
-  /* ══ MAIN TRANSCRIPTION ═══════════════════════════════════════*/
+  // ── Main transcription ──
   $('trans-btn').onclick = async function() {
     const btn = this;
     const origText = btn.querySelector('.btn-text').textContent;
@@ -861,74 +711,104 @@ canvas#tp-grain { position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.
     try {
       let audioBlob;
 
-      /* ── Mode fichier ─────────────────────────────────────── */
       if (currentMode === 'file') {
+        // ── Mode fichier ──
         if (!fileInput.files || !fileInput.files[0]) throw new Error('Aucun fichier sélectionné.');
-        audioBlob = fileInput.files[0];
-        setProgress(15, 'Fichier chargé…');
+        const file = fileInput.files[0];
+        if (file.size > 25 * 1024 * 1024) throw new Error('Le fichier dépasse la limite de 25 Mo de l\'API Groq.');
+        setProgress(20, 'Fichier chargé…');
+        audioBlob = file;
 
-      /* ── Mode URL via cobalt.tools ────────────────────────── */
       } else {
+        // ── Mode URL via Supadata ──
         const url = $('trans-url').value.trim();
         if (!url) throw new Error('Veuillez entrer une URL.');
-        setProgress(10, 'Extraction audio via cobalt.tools…');
-        audioBlob = await fetchAudioFromCobalt(url);
-        setProgress(45, 'Audio récupéré…');
-      }
+        setProgress(10, 'Extraction de la transcription via Supadata…');
 
-      /* ── Chunking si fichier > limite Groq ────────────────── */
-      let segments;
-      if (audioBlob.size > MAX_GROQ_BYTES) {
-        setProgress(20, 'Fichier volumineux — découpage en cours…');
-        segments = await splitAudioBlob(audioBlob, CHUNK_MB * 1024 * 1024);
-        setProgress(35, `Découpage terminé — ${segments.length} segment(s)`);
-      } else {
-        segments = [audioBlob];
-      }
+        // Supadata: transcription directe depuis URL YouTube/etc
+        const supaRes = await fetch('https://api.supadata.ai/v1/youtube/transcript?url=' + encodeURIComponent(url) + '&text=false', {
+          method: 'GET',
+          headers: {
+            'x-api-key': SUPADATA_API_KEY
+          }
+        });
 
-      /* ── Envoi séquentiel à la fonction serverless ─────────── */
-      const allSegments = [];
-      let totalDuration = 0;
-
-      for (let i = 0; i < segments.length; i++) {
-        const pctStart = 35 + Math.round((i / segments.length) * 55);
-        const pctEnd   = 35 + Math.round(((i + 1) / segments.length) * 55);
-        setProgress(pctStart, `Transcription du segment ${i + 1}/${segments.length}…`,
-          segments.length > 1 ? `Segment ${i + 1} sur ${segments.length}` : '');
-
-        const segResult = await transcribeBlob(segments[i]);
-
-        if (segResult.segments && segResult.segments.length > 0) {
-          // Décaler les timestamps par la durée cumulée
-          segResult.segments.forEach(seg => {
-            allSegments.push({
-              speaker: 'SPEAKER_00',
-              start: (seg.start || 0) + totalDuration,
-              end:   (seg.end   || 0) + totalDuration,
-              text:  seg.text.trim()
-            });
-          });
-          totalDuration += segResult.duration || 0;
-        } else {
-          allSegments.push({
-            speaker: 'SPEAKER_00',
-            start: totalDuration,
-            end:   totalDuration,
-            text:  (segResult.text || '').trim()
-          });
+        if (!supaRes.ok) {
+          const errBody = await supaRes.json().catch(() => ({}));
+          throw new Error(errBody?.message || errBody?.error || `Supadata: ${supaRes.status} — URL non supportée ou vidéo inaccessible.`);
         }
-        setProgress(pctEnd, `Segment ${i + 1}/${segments.length} transcrit ✓`);
+
+        const supaData = await supaRes.json();
+        setProgress(90, 'Traitement de la transcription…');
+
+        // Supadata renvoie { content: [{text, offset, duration, lang}], lang, availableLangs }
+        if (!supaData.content || !Array.isArray(supaData.content) || supaData.content.length === 0) {
+          throw new Error('Aucune transcription disponible pour cette vidéo (sous-titres absents ou désactivés).');
+        }
+
+        // Convertir le format Supadata en format interne
+        const dialogue = supaData.content.map(seg => ({
+          speaker: 'SPEAKER_00',
+          start: (seg.offset || 0) / 1000,
+          end: ((seg.offset || 0) + (seg.duration || 0)) / 1000,
+          text: (seg.text || '').trim()
+        }));
+
+        const totalDuration = dialogue.length > 0
+          ? dialogue[dialogue.length - 1].end
+          : 0;
+
+        $('trans-progress').style.display = 'none';
+        btn.disabled = false;
+        btn.querySelector('.btn-text').textContent = origText;
+        processTranscription({
+          analyzed_dialogue: { dialogue, speakers_count: 1 },
+          duration: totalDuration
+        });
+        return;
       }
 
-      setProgress(98, 'Assemblage de la transcription…');
+      // ── Envoi à Groq Whisper (mode fichier seulement) ──
+      setProgress(40, 'Envoi à Groq Whisper…');
+
+      const formData = new FormData();
+      const ext = (audioBlob.type && audioBlob.type.includes('mp4')) ? 'mp4' : 'mp3';
+      formData.append('file', audioBlob, 'audio.' + ext);
+      formData.append('model', 'whisper-large-v3-turbo');
+      formData.append('response_format', 'verbose_json');
+
+      const interval = setInterval(() => {
+        const cur = parseFloat($('trans-progress-bar').style.width) || 40;
+        if (cur < 90) setProgress(cur + 2, 'Transcription en cours…');
+      }, 400);
+
+      const groqRes = await fetch('https://api.groq.com/openai/v1/audio/transcriptions', {
+        method: 'POST',
+        headers: { 'Authorization': 'Bearer ' + GROQ_API_KEY },
+        body: formData
+      });
+
+      clearInterval(interval);
+
+      if (!groqRes.ok) {
+        const errBody = await groqRes.json().catch(() => ({}));
+        throw new Error(errBody?.error?.message || `Groq API: ${groqRes.status}`);
+      }
+
+      setProgress(95, 'Analyse du résultat…');
+      const result = await groqRes.json();
+
       $('trans-progress').style.display = 'none';
       btn.disabled = false;
       btn.querySelector('.btn-text').textContent = origText;
 
-      processTranscription({
-        analyzed_dialogue: { dialogue: allSegments, speakers_count: 1 },
-        duration: totalDuration
-      });
+      // Build dialogue from segments
+      if (result.segments && result.segments.length > 0) {
+        const dialogue = result.segments.map(seg => ({ speaker: 'SPEAKER_00', start: seg.start, end: seg.end, text: seg.text.trim() }));
+        processTranscription({ analyzed_dialogue: { dialogue, speakers_count: 1 }, duration: result.duration || 0 });
+      } else {
+        processTranscription({ analyzed_dialogue: { dialogue: [{ speaker: 'SPEAKER_00', start: 0, end: 0, text: result.text }], speakers_count: 1 }, duration: 0 });
+      }
 
     } catch(error) {
       $('trans-progress').style.display = 'none';
@@ -938,218 +818,6 @@ canvas#tp-grain { position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.
     }
   };
 
-  /* ══ APPEL FONCTION SERVERLESS ════════════════════════════════
-   * Envoie un Blob audio au proxy, récupère le JSON Groq.
-   * ─────────────────────────────────────────────────────────────*/
-  async function transcribeBlob(blob) {
-    const formData = new FormData();
-    const ext = mimeToExt(blob.type);
-    formData.append('file', blob, 'audio.' + ext);
-    formData.append('model', 'whisper-large-v3-turbo');
-    formData.append('response_format', 'verbose_json');
-    formData.append('language', 'fr');
-
-    // En mode admin, on peut transmettre un header de secours (optionnel)
-    const headers = {};
-    if (adminMode && getAdminKey()) {
-      headers['X-Admin-Key'] = getAdminKey();
-    }
-
-    const res = await fetch(API_ENDPOINT, { method: 'POST', headers, body: formData });
-
-    if (!res.ok) {
-      const errBody = await res.json().catch(() => ({}));
-      throw new Error(errBody?.error || `Serveur: ${res.status}`);
-    }
-    return res.json();
-  }
-
-  /* ══ EXTRACTION AUDIO VIA COBALT.TOOLS ═══════════════════════
-   * Améliorations :
-   *  • Gestion de tous les statuts connus (stream, redirect, tunnel, picker)
-   *  • Tentative sur l'instance publique de cobalt (api.cobalt.tools)
-   *  • Conversion forcée en Blob avec type MIME correct
-   * ─────────────────────────────────────────────────────────────*/
-  async function fetchAudioFromCobalt(url) {
-    const COBALT_API = 'https://api.cobalt.tools/';
-
-    const cobaltRes = await fetch(COBALT_API, {
-      method: 'POST',
-      headers: {
-        'Content-Type':  'application/json',
-        'Accept':        'application/json',
-      },
-      body: JSON.stringify({
-        url,
-        downloadMode: 'audio',
-        audioFormat:  'mp3',
-        audioBitrate: '128',
-        filenameStyle: 'basic',
-      })
-    });
-
-    if (!cobaltRes.ok) {
-      throw new Error(`cobalt.tools a répondu avec HTTP ${cobaltRes.status}. L'URL est peut-être non supportée.`);
-    }
-
-    const cobaltData = await cobaltRes.json();
-    let audioUrl = null;
-
-    switch (cobaltData.status) {
-      case 'stream':
-      case 'redirect':
-      case 'tunnel':
-        audioUrl = cobaltData.url;
-        break;
-      case 'picker':
-        // On cherche d'abord un élément audio, sinon on prend le premier
-        const picked = (cobaltData.picker || []).find(p => p.type === 'audio')
-                    || (cobaltData.picker || [])[0];
-        if (!picked) throw new Error('cobalt.tools : aucun flux audio disponible pour cette URL.');
-        audioUrl = picked.url;
-        break;
-      default:
-        throw new Error(
-          cobaltData.error?.message ||
-          cobaltData.error?.code    ||
-          `cobalt.tools: réponse inattendue (status="${cobaltData.status}")`
-        );
-    }
-
-    if (!audioUrl) throw new Error('cobalt.tools: URL audio vide.');
-
-    // Téléchargement et forçage du type MIME en audio/mpeg
-    const audioRes = await fetch(audioUrl);
-    if (!audioRes.ok) throw new Error(`Impossible de télécharger l'audio (HTTP ${audioRes.status}).`);
-
-    const rawBuf  = await audioRes.arrayBuffer();
-    const mimeHdr = audioRes.headers.get('content-type') || 'audio/mpeg';
-    // On normalise : cobalt renvoie parfois des types génériques
-    const mime = mimeHdr.startsWith('audio/') ? mimeHdr : 'audio/mpeg';
-    return new Blob([rawBuf], { type: mime });
-  }
-
-  /* ══ CHUNKING — Web Audio API ═════════════════════════════════
-   * Découpe un Blob audio en segments de targetBytes octets max.
-   * Utilise AudioContext.decodeAudioData → OfflineAudioContext
-   * pour ré-encoder chaque portion en WAV (format universel).
-   * ─────────────────────────────────────────────────────────────*/
-  async function splitAudioBlob(blob, targetBytes) {
-    const arrayBuffer = await blob.arrayBuffer();
-    const AudioCtx = window.AudioContext || window.webkitAudioContext;
-    if (!AudioCtx) throw new Error('Web Audio API non supporté par ce navigateur.');
-
-    const ctx = new AudioCtx();
-    let decoded;
-    try {
-      decoded = await ctx.decodeAudioData(arrayBuffer);
-    } catch(e) {
-      throw new Error('Impossible de décoder le fichier audio : ' + e.message);
-    }
-    await ctx.close();
-
-    const sampleRate    = decoded.sampleRate;
-    const numChannels   = decoded.numberOfChannels;
-    const totalSamples  = decoded.length;
-
-    // Estimation : un sample float32 = 4 octets ; WAV non compressé
-    const bytesPerSample = 4 * numChannels;
-    const samplesPerChunk = Math.floor(targetBytes / bytesPerSample);
-
-    const chunks = [];
-    let offset = 0;
-
-    while (offset < totalSamples) {
-      const length = Math.min(samplesPerChunk, totalSamples - offset);
-      const offline = new OfflineAudioContext(numChannels, length, sampleRate);
-
-      // Copier les samples dans un AudioBuffer
-      const buf = offline.createBuffer(numChannels, length, sampleRate);
-      for (let ch = 0; ch < numChannels; ch++) {
-        const src  = decoded.getChannelData(ch);
-        const dest = buf.getChannelData(ch);
-        for (let s = 0; s < length; s++) dest[s] = src[offset + s];
-      }
-
-      // Créer un noeud source et lancer le rendu
-      const src = offline.createBufferSource();
-      src.buffer = buf;
-      src.connect(offline.destination);
-      src.start(0);
-      const rendered = await offline.startRendering();
-
-      // Encoder en WAV PCM 16 bits
-      chunks.push(audioBufferToWavBlob(rendered));
-      offset += length;
-    }
-
-    return chunks;
-  }
-
-  /** Encode un AudioBuffer en Blob WAV 16-bit PCM */
-  function audioBufferToWavBlob(buffer) {
-    const numChannels = buffer.numberOfChannels;
-    const sampleRate  = buffer.sampleRate;
-    const numSamples  = buffer.length;
-    const bitsPerSample = 16;
-    const bytesPerSample = bitsPerSample / 8;
-    const blockAlign  = numChannels * bytesPerSample;
-    const byteRate    = sampleRate * blockAlign;
-    const dataSize    = numSamples * blockAlign;
-    const wavBuf      = new ArrayBuffer(44 + dataSize);
-    const view        = new DataView(wavBuf);
-
-    function writeStr(offset, str) {
-      for (let i = 0; i < str.length; i++) view.setUint8(offset + i, str.charCodeAt(i));
-    }
-
-    writeStr(0,  'RIFF');  view.setUint32(4,  36 + dataSize, true);
-    writeStr(8,  'WAVE');  writeStr(12, 'fmt ');
-    view.setUint32(16, 16, true);          // chunk size
-    view.setUint16(20,  1, true);          // PCM
-    view.setUint16(22, numChannels, true);
-    view.setUint32(24, sampleRate,  true);
-    view.setUint32(28, byteRate,    true);
-    view.setUint16(32, blockAlign,  true);
-    view.setUint16(34, bitsPerSample, true);
-    writeStr(36, 'data'); view.setUint32(40, dataSize, true);
-
-    let sampleOffset = 44;
-    for (let s = 0; s < numSamples; s++) {
-      for (let ch = 0; ch < numChannels; ch++) {
-        const sample = buffer.getChannelData(ch)[s];
-        const clamped = Math.max(-1, Math.min(1, sample));
-        view.setInt16(sampleOffset, clamped < 0 ? clamped * 0x8000 : clamped * 0x7FFF, true);
-        sampleOffset += 2;
-      }
-    }
-
-    return new Blob([wavBuf], { type: 'audio/wav' });
-  }
-
-  /** Construit un WAV silencieux minimal (pour le test admin) */
-  function buildSilentWav(durationSec, sampleRate) {
-    const numSamples = durationSec * sampleRate;
-    const dataSize   = numSamples * 2;
-    const buf        = new ArrayBuffer(44 + dataSize);
-    const v          = new DataView(buf);
-    const ws = (off, s) => { for(let i=0;i<s.length;i++) v.setUint8(off+i,s.charCodeAt(i)); };
-    ws(0,'RIFF'); v.setUint32(4,36+dataSize,true); ws(8,'WAVE'); ws(12,'fmt ');
-    v.setUint32(16,16,true); v.setUint16(20,1,true); v.setUint16(22,1,true);
-    v.setUint32(24,sampleRate,true); v.setUint32(28,sampleRate*2,true);
-    v.setUint16(32,2,true); v.setUint16(34,16,true); ws(36,'data'); v.setUint32(40,dataSize,true);
-    return new Blob([buf], { type: 'audio/wav' });
-  }
-
-  /** Déduit l'extension à partir du MIME type */
-  function mimeToExt(mime) {
-    const map = { 'audio/mpeg':'mp3','audio/mp3':'mp3','audio/wav':'wav','audio/wave':'wav',
-                  'audio/ogg':'ogg','audio/flac':'flac','audio/mp4':'mp4','audio/x-m4a':'m4a',
-                  'video/mp4':'mp4','video/webm':'webm','video/ogg':'ogg' };
-    return map[mime] || 'mp3';
-  }
-
-  /* ══ UI HELPERS ═══════════════════════════════════════════════*/
   function showError(message) {
     $('trans-error').style.display     = 'block';
     $('trans-error-msg').textContent   = message;
@@ -1186,7 +854,7 @@ canvas#tp-grain { position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.
     data.forEach((l, index) => {
       const speakerColor = colors[l.speaker] || '#4a7fb5';
       const hasTs  = l.start !== undefined && l.end !== undefined && (l.start > 0 || l.end > 0);
-      const delay  = Math.min(index * 0.04, 2);
+      const delay  = Math.min(index * 0.04, 2); // cap animation delay
       html += `<div class="transcript-line" style="animation-delay:${delay}s">`;
       if (hasTs) html += `<span class="transcript-timestamp">${fmtTs(l.start)} → ${fmtTs(l.end)}</span>`;
       html += `<div>
@@ -1226,7 +894,7 @@ canvas#tp-grain { position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.
     setTimeout(() => { btn.textContent = orig; btn.style.background = ''; }, 1500);
   }
 
-  /* ══ EXPORTS ══════════════════════════════════════════════════*/
+  // ── Exports ──
   $('trans-copy').onclick = function() {
     let text = '';
     data.forEach(l => {
@@ -1270,7 +938,7 @@ canvas#tp-grain { position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.
     switchTab('file');
   };
 
-  /* ══ UTILS ════════════════════════════════════════════════════*/
+  // ── Utils ──
   function fmtTs(sec) {
     sec = sec || 0;
     return pad2(Math.floor(sec/3600)) + ':' + pad2(Math.floor((sec%3600)/60)) + ':' + pad2(Math.floor(sec%60)) + '.' + pad3(Math.floor((sec%1)*1000));
