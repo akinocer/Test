@@ -1,0 +1,50 @@
+name: Deploy Abilan Lab
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages:    write
+  id-token: write
+
+concurrency:
+  group:              'pages'
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url:  ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # ── Les clés ne sont JAMAIS dans le HTML du dépôt ──────────────────
+      # Votre index.html doit contenir les placeholders :
+      #   const WORKER_URL = '%%WORKER_URL%%';
+      # C'est tout ce dont le front a besoin — les vraies clés restent
+      # dans le Worker Cloudflare, côté serveur.
+
+      - name: Injecter l'URL du Worker
+        env:
+          WORKER_URL: ${{ secrets.WORKER_URL }}
+        run: |
+          sed -i "s|%%WORKER_URL%%|${WORKER_URL}|g" index.html
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id:   deployment
+        uses: actions/deploy-pages@v4
