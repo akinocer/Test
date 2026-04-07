@@ -46,7 +46,10 @@ body {
     color: #ffffff;
     overflow-x: hidden;
     min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
+#wm-tool { flex: 1; }
 a { color: inherit; text-decoration: none; }
 
 /* ── Background layers ── */
@@ -184,7 +187,7 @@ a { color: inherit; text-decoration: none; }
 .tp-nav-status-label { font-family: var(--nav-mono); font-size: 11px; color: #6ba68d; letter-spacing: 0.05em; text-transform: uppercase; }
 
 .tp-nav-burger {
-    display: none;
+    display: flex;
     flex-direction: column; justify-content: center; align-items: center;
     gap: 5px; width: 40px; height: 40px;
     background: rgba(168,197,226,0.06); border: 1px solid rgba(168,197,226,0.15);
@@ -273,10 +276,7 @@ a { color: inherit; text-decoration: none; }
 
 .tp-nav-spacer { height: 68px; display: block; }
 
-@media (max-width: 900px) {
-    .tp-nav-links, .tp-nav-status { display: none; }
-    .tp-nav-burger { display: flex; }
-}
+.tp-nav-links, .tp-nav-status { display: none; }
 @media (max-width: 480px) {
     .tp-nav-brand-sub { display: none; }
     .tp-nav-inner { padding: 0 1rem; }
@@ -710,6 +710,16 @@ a { color: inherit; text-decoration: none; }
             <span>Le Lab</span>
             <svg class="tp-mobile-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7M17 7H7M17 7v10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a>
+        <a href="../transcription/" class="tp-mobile-link" data-nav="transcription">
+            <span class="tp-mobile-link-num">02</span>
+            <span>Transcription Audio</span>
+            <svg class="tp-mobile-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7M17 7H7M17 7v10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <a href="../filigrane-remover/" class="tp-mobile-link tp-mobile-link--active" data-nav="filigrane">
+            <span class="tp-mobile-link-num">03</span>
+            <span>Filigrane Remover</span>
+            <svg class="tp-mobile-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7M17 7H7M17 7v10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
     </nav>
     <div class="tp-mobile-footer">
         <span class="tp-mobile-footer-text">© 2026 Abilan Lab</span>
@@ -722,6 +732,42 @@ a { color: inherit; text-decoration: none; }
 
 <!-- ══ OUTIL ══ -->
 <div id="wm-tool">
+
+    <!-- Header explicatif -->
+    <div style="text-align:center; padding: 2rem 0 2.5rem; max-width: 720px; margin: 0 auto;">
+        <div style="display:inline-flex;align-items:center;gap:8px;padding:5px 14px;background:rgba(90,123,166,.12);border:1px solid rgba(90,123,166,.25);border-radius:100px;font-family:'JetBrains Mono',monospace;font-size:11px;color:#a8c5e2;letter-spacing:.08em;text-transform:uppercase;margin-bottom:1.5rem;">
+            <span style="width:5px;height:5px;background:#5a7ba6;border-radius:50%;display:inline-block;box-shadow:0 0 6px rgba(90,123,166,.7);"></span>
+            Outil client-side — aucune donnée envoyée
+        </div>
+        <h1 style="font-size:clamp(1.8rem,5vw,2.8rem);font-weight:800;letter-spacing:-0.03em;margin-bottom:1rem;background:linear-gradient(135deg,#ffffff 0%,#a8c5e2 60%,#5a7ba6 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">Suppresseur de Filigrane</h1>
+        <p style="font-size:clamp(.95rem,2.5vw,1.1rem);font-weight:300;color:rgba(168,197,226,.7);line-height:1.7;margin-bottom:2rem;">
+            Supprimez les filigranes de vos images directement dans le navigateur.<br>
+            Vos fichiers ne quittent jamais votre appareil.
+        </p>
+        <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:12px;margin-bottom:.5rem;">
+            <div style="display:flex;align-items:center;gap:10px;padding:12px 18px;background:rgba(168,197,226,.05);border:1px solid rgba(168,197,226,.12);border-radius:14px;text-align:left;min-width:200px;">
+                <span style="font-size:22px;">1️⃣</span>
+                <div>
+                    <div style="font-size:13px;font-weight:600;color:#fff;margin-bottom:2px;">Importez une image</div>
+                    <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(168,197,226,.45);">PNG, JPG, WEBP</div>
+                </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:12px 18px;background:rgba(168,197,226,.05);border:1px solid rgba(168,197,226,.12);border-radius:14px;text-align:left;min-width:200px;">
+                <span style="font-size:22px;">2️⃣</span>
+                <div>
+                    <div style="font-size:13px;font-weight:600;color:#fff;margin-bottom:2px;">Peignez le filigrane</div>
+                    <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(168,197,226,.45);">Pinceau rouge ou Auto (Canva)</div>
+                </div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;padding:12px 18px;background:rgba(168,197,226,.05);border:1px solid rgba(168,197,226,.12);border-radius:14px;text-align:left;min-width:200px;">
+                <span style="font-size:22px;">3️⃣</span>
+                <div>
+                    <div style="font-size:13px;font-weight:600;color:#fff;margin-bottom:2px;">Supprimez &amp; téléchargez</div>
+                    <div style="font-family:'JetBrains Mono',monospace;font-size:11px;color:rgba(168,197,226,.45);">Export PNG sans filigrane</div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div id="wm-cv-loading">
         <div class="wm-spinner"></div>
