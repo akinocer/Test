@@ -126,7 +126,21 @@ canvas#tp-grain { position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.
 .tp-mobile-status-dot { width:5px;height:5px;background:#6ba68d;border-radius:50%;animation:status-pulse 2.5s ease-in-out infinite; }
 .tp-mobile-footer-status { font-family:var(--nav-mono);font-size:11px;color:rgba(107,166,141,0.6);letter-spacing:0.04em;text-transform:uppercase; }
 .tp-nav-spacer { height:68px;display:block; }
-.tp-nav-links, .tp-nav-status { display:none; }
+/* ── Nav : liens toujours visibles avec hiérarchie ── */
+.tp-nav-links { display:flex; align-items:center; gap:2px; }
+.tp-nav-status { display:flex; }
+.tp-nav-link--sub { font-size:12px !important; padding:5px 11px !important; color:rgba(168,197,226,0.42) !important; }
+.tp-nav-link--sub:hover { color:rgba(168,197,226,0.8) !important; background:rgba(168,197,226,0.06) !important; }
+.tp-nav-link--sub.tp-nav-link--active { color:rgba(168,197,226,0.85) !important; background:rgba(90,123,166,0.1) !important; }
+.tp-nav-link--sub.tp-nav-link--active::after { width:10px !important; }
+.tp-nav-sep { color:rgba(168,197,226,0.2);font-size:13px;margin:0 1px;pointer-events:none;user-select:none; }
+/* Mobile menu : hiérarchie visuelle */
+.tp-mobile-link--parent { font-size:32px;color:rgba(168,197,226,0.7) !important; }
+.tp-mobile-link--child { font-size:18px !important;padding:10px 16px !important;padding-left:44px !important;color:rgba(168,197,226,0.4) !important;border-left-color:transparent !important; }
+.tp-mobile-link--child:hover { color:rgba(168,197,226,0.9) !important;padding-left:50px !important;border-left-color:var(--nav-blue-600) !important; }
+.tp-mobile-link--child.tp-mobile-link--active { color:var(--nav-white) !important;padding-left:50px !important;border-left-color:var(--nav-blue-400) !important; }
+.tp-mobile-link--child .tp-mobile-link-num { font-size:9px; }
+@media (max-width:700px) { .tp-nav-link--sub { display:none; } .tp-nav-sep { display:none; } }
 @media (max-width:480px) { .tp-nav-brand-sub { display:none; } .tp-nav-inner { padding:0 1rem; } .tp-mobile-link { font-size:22px; } }
 
 /* ── Footer ── */
@@ -296,6 +310,13 @@ canvas#tp-grain { position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.
 .transcript-speaker-tag { display:inline-block;padding:2px 10px;border-radius:6px;font-size:12px;font-weight:700;color:#fff;margin-right:8px;margin-bottom:4px; }
 .transcript-text { font-size:15px;line-height:1.75;color:rgba(255,255,255,.9);display:inline; }
 
+/* Tours de parole (multi-interlocuteurs) */
+.transcript-turn { margin-bottom:18px;padding:14px 16px;background:rgba(168,197,226,.03);border-radius:0 10px 10px 0;transition:all 0.2s;animation:lineAppear 0.4s backwards; }
+.transcript-turn:hover { background:rgba(168,197,226,.07); }
+.turn-header { display:flex;align-items:center;gap:10px;margin-bottom:8px; }
+.turn-header .transcript-timestamp { display:inline;margin-bottom:0;font-size:11px; }
+.turn-text { font-size:15px;line-height:1.8;color:rgba(255,255,255,.88);margin:0;padding-left:4px; }
+
 /* View toggle + translate bar */
 .transcript-controls { display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid rgba(168,197,226,.1); }
 .view-toggle { display:flex;background:rgba(168,197,226,.06);border:1px solid rgba(168,197,226,.12);border-radius:12px;padding:4px;gap:3px; }
@@ -390,6 +411,10 @@ canvas#tp-grain { position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.
                 <span class="tp-nav-link-dot" aria-hidden="true"></span>
                 Le Lab
             </a>
+            <span class="tp-nav-sep" aria-hidden="true">›</span>
+            <a href="../transcription/" class="tp-nav-link tp-nav-link--sub" data-nav="transcription">Transcription</a>
+            <a href="../filigrane-remover/" class="tp-nav-link tp-nav-link--sub" data-nav="filigrane">Filigrane</a>
+            <a href="../image-extender/" class="tp-nav-link tp-nav-link--sub" data-nav="extender">Extension</a>
         </nav>
         <div class="tp-nav-status" aria-label="Statut du service">
             <span class="tp-nav-status-dot" aria-hidden="true"></span>
@@ -405,20 +430,25 @@ canvas#tp-grain { position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.
 
 <div class="tp-mobile-menu" id="tp-mobile-menu">
     <nav class="tp-mobile-nav">
-        <a href="../" class="tp-mobile-link" data-nav="lab">
+        <a href="../" class="tp-mobile-link tp-mobile-link--parent" data-nav="lab">
             <span class="tp-mobile-link-num">01</span>
             <span>Le Lab</span>
             <svg class="tp-mobile-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7M17 7H7M17 7v10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a>
-        <a href="../transcription/" class="tp-mobile-link tp-mobile-link--active" data-nav="transcription">
-            <span class="tp-mobile-link-num">02</span>
+        <a href="../transcription/" class="tp-mobile-link tp-mobile-link--child tp-mobile-link--active" data-nav="transcription">
+            <span class="tp-mobile-link-num">↳ 02</span>
             <span>Transcription Audio</span>
-            <svg class="tp-mobile-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7M17 7H7M17 7v10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <svg class="tp-mobile-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7M17 7H7M17 7v10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a>
-        <a href="../filigrane-remover/" class="tp-mobile-link" data-nav="filigrane">
-            <span class="tp-mobile-link-num">03</span>
+        <a href="../filigrane-remover/" class="tp-mobile-link tp-mobile-link--child" data-nav="filigrane">
+            <span class="tp-mobile-link-num">↳ 03</span>
             <span>Filigrane Remover</span>
-            <svg class="tp-mobile-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7M17 7H7M17 7v10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            <svg class="tp-mobile-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7M17 7H7M17 7v10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <a href="../image-extender/" class="tp-mobile-link tp-mobile-link--child" data-nav="extender">
+            <span class="tp-mobile-link-num">↳ 04</span>
+            <span>Extension d'image</span>
+            <svg class="tp-mobile-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7M17 7H7M17 7v10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </a>
     </nav>
     <div class="tp-mobile-footer">
@@ -474,7 +504,7 @@ canvas#tp-grain { position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.
       <div class="logo-ripple"></div>
     </div>
     <h2 class="trans-title">Transcription Audio &amp; Vidéo</h2>
-    <p class="trans-subtitle">// Propulsé par Groq Whisper — 100% client-side</p>
+    <p class="trans-subtitle">Transformez n'importe quel enregistrement en texte en quelques secondes</p>
   </div>
 
 
@@ -507,17 +537,27 @@ canvas#tp-grain { position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.
         <p class="config-section-title">Paramètres de transcription</p>
         <div class="config-grid">
           <div class="config-field">
-            <label class="config-label" for="cfg-model">Modèle Whisper</label>
+            <label class="config-label" for="cfg-model">Vitesse vs précision</label>
             <select id="cfg-model" class="config-select">
-              <option value="whisper-large-v3-turbo">whisper-large-v3-turbo (rapide)</option>
-              <option value="whisper-large-v3">whisper-large-v3 (précis)</option>
-              <option value="distil-whisper-large-v3-en">distil-whisper-large-v3-en (EN only)</option>
+              <option value="whisper-large-v3-turbo">⚡ Rapide</option>
+              <option value="whisper-large-v3">🎯 Très précis</option>
+              <option value="distil-whisper-large-v3-en">🇬🇧 Anglais uniquement</option>
+            </select>
+          </div>
+          <div class="config-field">
+            <label class="config-label" for="cfg-speakers">Nombre d'interlocuteurs</label>
+            <select id="cfg-speakers" class="config-select">
+              <option value="auto">🔍 Détection auto</option>
+              <option value="1">1 — seul(e)</option>
+              <option value="2">2 — dialogue</option>
+              <option value="3">3 interlocuteurs</option>
+              <option value="4">4 interlocuteurs</option>
             </select>
           </div>
           <div class="config-field">
             <label class="config-label" for="cfg-lang">Langue audio</label>
             <select id="cfg-lang" class="config-select">
-              <option value="">Détection auto</option>
+              <option value="">🔍 Détection automatique</option>
               <option value="fr">Français</option>
               <option value="en">Anglais</option>
               <option value="es">Espagnol</option>
@@ -534,19 +574,6 @@ canvas#tp-grain { position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.
               <option value="tr">Turc</option>
               <option value="hi">Hindi</option>
             </select>
-          </div>
-          <div class="config-field">
-            <label class="config-label" for="cfg-temperature">Température</label>
-            <select id="cfg-temperature" class="config-select">
-              <option value="0">0 — déterministe</option>
-              <option value="0.2">0.2</option>
-              <option value="0.5">0.5</option>
-              <option value="0.8">0.8 — créatif</option>
-            </select>
-          </div>
-          <div class="config-field config-field-wide">
-            <label class="config-label" for="cfg-prompt">Contexte / prompt optionnel</label>
-            <input type="text" id="cfg-prompt" class="config-input-text" placeholder="Ex : noms propres, termes techniques, style attendu…">
           </div>
         </div>
       </div>
@@ -741,8 +768,9 @@ canvas#tp-grain { position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.
 <script>
 (function () {
   function run() {
-    document.querySelectorAll('.tp-nav-link[data-nav="lab"]').forEach(function(el){ el.classList.add('tp-nav-link--active'); });
-    document.querySelectorAll('.tp-mobile-link[data-nav="lab"]').forEach(function(el){ el.classList.add('tp-mobile-link--active'); });
+    // Sur la page transcription : marquer "Transcription" actif dans le desktop nav
+    document.querySelectorAll('.tp-nav-link[data-nav="transcription"]').forEach(function(el){ el.classList.add('tp-nav-link--active'); });
+    // "Le Lab" reste cliquable mais sans état actif fort
     var header = document.getElementById('tp-nav-header');
     if (header) window.addEventListener('scroll', function(){ header.classList.toggle('scrolled', window.scrollY > 30); }, { passive: true });
   }
@@ -782,7 +810,14 @@ canvas#tp-grain { position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.
 
   let names = {}, colors = {}, data = [], currentMode = 'file';
   let viewMode = 'speakers', translatedData = null, showingTranslation = false;
+  let _storedFile = null; // garde le fichier en mémoire dès la sélection (protection mobile)
+  let _isProcessing = false;
   const $ = id => document.getElementById(id);
+
+  // ── Protection contre navigation accidentelle pendant le traitement ──
+  window.addEventListener('beforeunload', function(e) {
+    if (_isProcessing) { e.preventDefault(); e.returnValue = ''; }
+  });
 
   // ── Card glow ──
   document.querySelectorAll('.bento-card').forEach(card => {
@@ -818,12 +853,21 @@ canvas#tp-grain { position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.
     e.preventDefault(); e.stopPropagation();
     dropZone.classList.remove('drag-over');
     const files = e.dataTransfer.files;
-    if (files && files.length > 0) { const dt = new DataTransfer(); dt.items.add(files[0]); fileInput.files = dt.files; updateFileLabel(files[0]); }
+    if (files && files.length > 0) {
+      _storedFile = files[0]; // stocker immédiatement
+      try { const dt = new DataTransfer(); dt.items.add(files[0]); fileInput.files = dt.files; } catch(e) {}
+      updateFileLabel(_storedFile);
+    }
   });
 
   fileInput.onchange = function() {
-    if (this.files && this.files[0]) updateFileLabel(this.files[0]);
-    else $('trans-file-label-text').innerHTML = 'Déposez votre fichier ici<br><small style="font-size:13px;font-weight:400;color:#5a7ba6;">ou cliquez pour parcourir</small>';
+    if (this.files && this.files[0]) {
+      _storedFile = this.files[0]; // stocké immédiatement = survit aux glitches mobile
+      updateFileLabel(_storedFile);
+    } else {
+      _storedFile = null;
+      $('trans-file-label-text').innerHTML = 'Déposez votre fichier ici<br><small style="font-size:13px;font-weight:400;color:#5a7ba6;">ou cliquez pour parcourir</small>';
+    }
   };
 
   function updateFileLabel(file) {
@@ -842,6 +886,7 @@ canvas#tp-grain { position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.
     const btn = this;
     const origText = btn.querySelector('.btn-text').textContent;
     btn.disabled = true;
+    _isProcessing = true;
     btn.querySelector('.btn-text').textContent = 'Transcription en cours…';
     $('trans-error').style.display     = 'none';
     $('trans-container').style.display = 'none';
@@ -852,9 +897,9 @@ canvas#tp-grain { position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.
       let audioBlob;
 
       if (currentMode === 'file') {
-        // ── Mode fichier ──
-        if (!fileInput.files || !fileInput.files[0]) throw new Error('Aucun fichier sélectionné.');
-        const file = fileInput.files[0];
+        // ── Mode fichier : utiliser le fichier stocké en mémoire ──
+        const file = _storedFile || (fileInput.files && fileInput.files[0]);
+        if (!file) throw new Error('Aucun fichier sélectionné.');
         const MAX_DIRECT = 24 * 1024 * 1024;
 
         if (file.size > MAX_DIRECT) {
@@ -910,8 +955,6 @@ canvas#tp-grain { position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.
             fd.append('model', $('cfg-model').value || 'whisper-large-v3-turbo');
             fd.append('response_format', 'verbose_json');
             if ($('cfg-lang').value) fd.append('language', $('cfg-lang').value);
-            if ($('cfg-temperature').value) fd.append('temperature', $('cfg-temperature').value);
-            if ($('cfg-prompt').value.trim()) fd.append('prompt', $('cfg-prompt').value.trim());
 
             const res = await fetch(WORKER_URL + '/api/groq/transcribe', { method: 'POST', body: fd });
             if (!res.ok) {
@@ -933,6 +976,7 @@ canvas#tp-grain { position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.
           }
 
           $('trans-progress').style.display = 'none';
+          _isProcessing = false;
           btn.disabled = false;
           btn.querySelector('.btn-text').textContent = origText;
           processTranscription({ analyzed_dialogue: { dialogue: allSegments, speakers_count: 1 }, duration: totalDuration });
@@ -979,6 +1023,7 @@ canvas#tp-grain { position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.
           : 0;
 
         $('trans-progress').style.display = 'none';
+        _isProcessing = false;
         btn.disabled = false;
         btn.querySelector('.btn-text').textContent = origText;
         processTranscription({
@@ -997,8 +1042,6 @@ canvas#tp-grain { position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.
       formData.append('model', $('cfg-model').value || 'whisper-large-v3-turbo');
       formData.append('response_format', 'verbose_json');
       if ($('cfg-lang').value) formData.append('language', $('cfg-lang').value);
-      if ($('cfg-temperature').value) formData.append('temperature', $('cfg-temperature').value);
-      if ($('cfg-prompt').value.trim()) formData.append('prompt', $('cfg-prompt').value.trim());
 
       const interval = setInterval(() => {
         const cur = parseFloat($('trans-progress-bar').style.width) || 40;
@@ -1021,6 +1064,7 @@ canvas#tp-grain { position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.
       const result = await groqRes.json();
 
       $('trans-progress').style.display = 'none';
+      _isProcessing = false;
       btn.disabled = false;
       btn.querySelector('.btn-text').textContent = origText;
 
@@ -1034,6 +1078,7 @@ canvas#tp-grain { position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.
 
     } catch(error) {
       $('trans-progress').style.display = 'none';
+      _isProcessing = false;
       this.disabled = false;
       this.querySelector('.btn-text').textContent = origText;
       showError(error.message || 'Erreur inconnue.');
@@ -1076,33 +1121,60 @@ canvas#tp-grain { position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.
     $('trans-container').style.display = 'none';
   }
 
+  const MODEL_LABELS = {
+    'whisper-large-v3-turbo': '⚡ Rapide',
+    'whisper-large-v3': '🎯 Très précis',
+    'distil-whisper-large-v3-en': '🇬🇧 Anglais uniquement'
+  };
+
   function updateStats(speakerCount, duration) {
-    const model = $('cfg-model').value || 'whisper-large-v3-turbo';
+    const modelKey = $('cfg-model').value || 'whisper-large-v3-turbo';
+    const modelLabel = MODEL_LABELS[modelKey] || modelKey;
     const lang  = $('cfg-lang').value || 'auto';
-    const temp  = $('cfg-temperature').value || '0';
     const words = data.reduce((n, l) => n + (l.text || '').trim().split(/\s+/).filter(Boolean).length, 0);
     const m = Math.floor(duration / 60), s = Math.floor(duration % 60);
     const durStr = duration > 0 ? `${m}m ${s}s` : '—';
 
     $('trans-stats').innerHTML = [
-      `<span class="stat-pill">🤖 ${model}</span>`,
+      `<span class="stat-pill">${modelLabel}</span>`,
       `<span class="stat-pill">🌐 ${lang}</span>`,
       `<span class="stat-pill">👥 ${speakerCount} intervenant${speakerCount > 1 ? 's' : ''}</span>`,
       `<span class="stat-pill">📝 ${words} mots</span>`,
-      `<span class="stat-pill">⏱️ ${durStr}</span>`,
-      `<span class="stat-pill">🌡️ t=${temp}</span>`
+      `<span class="stat-pill">⏱️ ${durStr}</span>`
     ].join('');
+  }
+
+  // ── Diarisation heuristique ──
+  function applyDiarization(segments, speakerCount) {
+    if (!segments.length || speakerCount < 2) return segments;
+    const sorted = [...segments].sort((a, b) => (a.start || 0) - (b.start || 0));
+    const GAP = 1.2; // secondes de silence = possible changement de locuteur
+    const speakers = Array.from({ length: speakerCount }, (_, i) => 'SPEAKER_0' + i);
+    let cur = 0, lastEnd = 0;
+    return sorted.map((seg, i) => {
+      if (i > 0 && (seg.start || 0) - lastEnd > GAP) {
+        cur = (cur + 1) % speakerCount;
+      }
+      lastEnd = seg.end || seg.start || 0;
+      return { ...seg, speaker: speakers[cur] };
+    });
   }
 
   function processTranscription(d) {
     const a = d.analyzed_dialogue;
     if (!a || !a.dialogue || !Array.isArray(a.dialogue)) { showError('Réponse inattendue.'); return; }
 
-    data = a.dialogue;
-    const count = a.speakers_count || 1;
+    const speakersSetting = $('cfg-speakers').value;
+    const requestedCount = speakersSetting === 'auto' ? 1 : parseInt(speakersSetting, 10);
+
+    data = requestedCount >= 2
+      ? applyDiarization(a.dialogue, requestedCount)
+      : a.dialogue;
+
+    const count = requestedCount >= 2 ? requestedCount : (a.speakers_count || 1);
 
     $('trans-container').style.display = 'block';
-    $('trans-info').innerHTML = `✅ <strong>${count} intervenant(s) détecté(s)</strong>`;
+    $('trans-info').innerHTML = `✅ <strong>${count} intervenant${count > 1 ? 's' : ''} détecté${count > 1 ? 's' : ''}</strong>`;
 
     if (d.duration && d.duration > 0) {
       const m = Math.floor(d.duration / 60), s = Math.floor(d.duration % 60);
@@ -1141,19 +1213,54 @@ canvas#tp-grain { position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.
       return;
     }
 
-    let html = '';
-    displayData.forEach((l, index) => {
-      const speakerColor = colors[l.speaker] || '#4a7fb5';
-      const hasTs  = l.start !== undefined && l.end !== undefined && (l.start > 0 || l.end > 0);
-      const delay  = Math.min(index * 0.04, 2);
-      html += `<div class="transcript-line" style="animation-delay:${delay}s">`;
-      if (hasTs) html += `<span class="transcript-timestamp">${fmtTs(l.start)} → ${fmtTs(l.end)}</span>`;
-      html += `<div>
-        <span class="transcript-speaker-tag" data-s="${escapeAttr(l.speaker)}" style="background:${speakerColor}">${escapeHtml(names[l.speaker] || l.speaker)}</span>
-        <span class="transcript-text">${escapeHtml((l.text || '').trim())}</span>
-      </div></div>`;
-    });
-    $('trans-result').innerHTML = html || empty;
+    // Grouper les segments en "tours de parole"
+    const uniqueSpeakers = [...new Set(displayData.map(x => x.speaker))];
+    const multiSpeaker = uniqueSpeakers.length >= 2;
+
+    if (multiSpeaker) {
+      // Regrouper les segments consécutifs du même locuteur en tours
+      const turns = [];
+      displayData.forEach(l => {
+        const last = turns[turns.length - 1];
+        if (last && last.speaker === l.speaker) {
+          last.segments.push(l);
+          if (l.end !== undefined) last.end = l.end;
+        } else {
+          turns.push({ speaker: l.speaker, start: l.start, end: l.end, segments: [l] });
+        }
+      });
+
+      let html = '';
+      turns.forEach((turn, idx) => {
+        const speakerColor = colors[turn.speaker] || '#4a7fb5';
+        const speakerName  = escapeHtml(names[turn.speaker] || turn.speaker);
+        const hasTs = turn.start !== undefined && (turn.start > 0 || turn.end > 0);
+        const delay = Math.min(idx * 0.05, 2);
+        const text  = turn.segments.map(s => (s.text || '').trim()).join(' ');
+        html += `<div class="transcript-turn" style="animation-delay:${delay}s;border-left:3px solid ${speakerColor}">`;
+        html += `<div class="turn-header">`;
+        html += `<span class="transcript-speaker-tag" data-s="${escapeAttr(turn.speaker)}" style="background:${speakerColor}">${speakerName}</span>`;
+        if (hasTs) html += `<span class="transcript-timestamp">${fmtTs(turn.start)}</span>`;
+        html += `</div>`;
+        html += `<p class="turn-text">${escapeHtml(text)}</p>`;
+        html += `</div>`;
+      });
+      $('trans-result').innerHTML = html || empty;
+    } else {
+      let html = '';
+      displayData.forEach((l, index) => {
+        const speakerColor = colors[l.speaker] || '#4a7fb5';
+        const hasTs  = l.start !== undefined && l.end !== undefined && (l.start > 0 || l.end > 0);
+        const delay  = Math.min(index * 0.04, 2);
+        html += `<div class="transcript-line" style="animation-delay:${delay}s">`;
+        if (hasTs) html += `<span class="transcript-timestamp">${fmtTs(l.start)} → ${fmtTs(l.end)}</span>`;
+        html += `<div>
+          <span class="transcript-speaker-tag" data-s="${escapeAttr(l.speaker)}" style="background:${speakerColor}">${escapeHtml(names[l.speaker] || l.speaker)}</span>
+          <span class="transcript-text">${escapeHtml((l.text || '').trim())}</span>
+        </div></div>`;
+      });
+      $('trans-result').innerHTML = html || empty;
+    }
   }
 
   function renderSpeakers(speakerList) {
@@ -1262,10 +1369,33 @@ canvas#tp-grain { position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.
     renderFileTranscript();
   };
 
-  // ── Traduction ──
+  // ── Traduction : priorité au champ libre, mutual exclusivity ──
+  // Quand on tape dans le champ libre → vider la liste déroulante
+  $('trans-lang-custom').addEventListener('input', function() {
+    if (this.value.trim()) $('trans-lang').value = '';
+  });
+  // Quand on choisit dans la liste → vider le champ libre
+  $('trans-lang').addEventListener('change', function() {
+    if (this.value) $('trans-lang-custom').value = '';
+  });
+
+  // Correspondances noms complets → codes ISO (pour faciliter la saisie)
+  const LANG_MAP = {
+    'français':'fr','french':'fr','anglais':'en','english':'en','espagnol':'es','spanish':'es',
+    'allemand':'de','german':'de','italien':'it','italian':'it','portugais':'pt','portuguese':'pt',
+    'arabe':'ar','arabic':'ar','chinois':'zh-CN','chinese':'zh-CN','japonais':'ja','japanese':'ja',
+    'coréen':'ko','korean':'ko','russe':'ru','russian':'ru','néerlandais':'nl','dutch':'nl',
+    'polonais':'pl','polish':'pl','turc':'tr','turkish':'tr','hindi':'hi','ukrainien':'uk',
+    'ukrainian':'uk','suédois':'sv','swedish':'sv','roumain':'ro','romanian':'ro',
+    'swahili':'sw','catalan':'ca','vietnamien':'vi','vietnamese':'vi','grec':'el','greek':'el',
+    'hébreu':'he','hebrew':'he','thaï':'th','thai':'th','indonésien':'id','indonesian':'id'
+  };
+
   $('trans-translate-btn').onclick = async function() {
-    const langCustom = $('trans-lang-custom').value.trim();
-    const lang = langCustom || $('trans-lang').value;
+    const rawCustom = $('trans-lang-custom').value.trim();
+    // Résoudre le nom complet en code ISO si besoin
+    const resolvedCustom = rawCustom ? (LANG_MAP[rawCustom.toLowerCase()] || rawCustom) : '';
+    const lang = resolvedCustom || $('trans-lang').value;
     if (!lang) { alert('Choisissez une langue dans la liste ou entrez un code/nom de langue.'); return; }
     if (!data.length) return;
 
